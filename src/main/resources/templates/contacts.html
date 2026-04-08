@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Dashboard</title>
+
+  <style>
+    body {
+        font-family: Arial;
+        background: #f8f9fa;
+        margin: 20px;
+    }
+
+    h2 {
+        text-align: center;
+    }
+
+    .top-bar {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+    }
+
+    button {
+        padding: 8px 15px;
+        background: red;
+        color: white;
+        border: none;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background: darkred;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+    }
+
+    th, td {
+        padding: 10px;
+        border: 1px solid #ddd;
+        text-align: center;
+    }
+
+    th {
+        background: #007bff;
+        color: white;
+    }
+
+    tr:nth-child(even) {
+        background: #f2f2f2;
+    }
+  </style>
+</head>
+
+<body>
+
+<h2>Admin Dashboard</h2>
+
+<div class="top-bar">
+  <h3>Contact Messages</h3>
+  <button onclick="logout()">Logout</button>
+</div>
+
+<table id="tbl">
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Name</th>
+    <th>Email</th>
+    <th>Message</th>
+  </tr>
+  </thead>
+  <tbody>
+  <!-- Data will come here -->
+  </tbody>
+</table>
+
+<script>
+  fetch('/contacts')
+  .then(res => {
+      if (res.status === 200) {
+          return res.json();
+      } else {
+          alert("Unauthorized! Please login as admin.");
+          window.location.href = "/login";
+      }
+  })
+  .then(data => {
+      const tbody = document.querySelector("#tbl tbody");
+
+      data.forEach(contact => {
+          const row = `
+              <tr>
+                  <td>${contact.id}</td>
+                  <td>${contact.name}</td>
+                  <td>${contact.email}</td>
+                  <td>${contact.message}</td>
+              </tr>
+          `;
+          tbody.innerHTML += row;
+      });
+  })
+  .catch(err => {
+      console.error(err);
+      alert("Error loading contacts");
+  });
+
+  function logout() {
+      window.location.href = "/logout";
+  }
+</script>
+
+</body>
+</html>
